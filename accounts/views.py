@@ -1,3 +1,4 @@
+from smtplib import SMTPException, SMTPRecipientsRefused
 from django.shortcuts import render
 from .forms import RegistrationForm
 from .models import Account
@@ -14,34 +15,34 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
+from django.core.mail import BadHeaderError
 
 from carts.views import _cart_id
 from carts.models import Cart, CartItem
 import requests
 
 
-# Create your views here.
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            fisrt_name = form.cleaned_data['first_name']
+            first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             phone_number = form.cleaned_data['phone_number']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            username = email.split('@')[0]
-            user = Account.objects.create_user(
-                first_name=fisrt_name,
-                last_name=last_name,
-                email=email,
-                username=username,
-                password=password
-            )
+            username = email.split("@")[0]
+            user = Account.objects.create_user(first_name=first_name, last_name=last_name, email=email, username=username, password=password)
             user.phone_number = phone_number
             user.save()
 
-            # User activation
+            # Create a user profile
+            # profile = UserProfile()
+            # profile.user_id = user.id
+            # profile.profile_picture = 'default/default-user.png'
+            # profile.save()
+
+            # USER ACTIVATION
             current_site = get_current_site(request)
             mail_subject = 'Please activate your account'
             message = render_to_string('accounts/account_verification_email.html', {
@@ -53,7 +54,7 @@ def register(request):
             to_email = email
             send_email = EmailMessage(mail_subject, message, to=[to_email])
             send_email.send()
-            # messages.success(request, 'Thank you for registering with us. We have sent you a verification email to your email address. Please verify it.')
+            # messages.success(request, 'Thank you for registering with us. We have sent you a verification email to your email address [rathan.kumar@gmail.com]. Please verify it.')
             return redirect('/accounts/login/?command=verification&email='+email)
     else:
         form = RegistrationForm()
@@ -61,6 +62,7 @@ def register(request):
         'form': form,
     }
     return render(request, 'accounts/register.html', context)
+
 
 def login(request):
     if request.method == 'POST':
