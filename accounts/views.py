@@ -14,7 +14,7 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, send_mail
 from django.core.mail import BadHeaderError
 
 from carts.views import _cart_id
@@ -51,9 +51,16 @@ def register(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': default_token_generator.make_token(user),
             })
-            to_email = email
-            send_email = EmailMessage(mail_subject, message, to=[to_email])
-            send_email.send()
+            # to_email = email
+            # send_email = EmailMessage(mail_subject, message, to=[to_email])
+            # send_email.send()
+            send_mail(
+                subject=mail_subject,
+                message=message,
+                from_email='vanhuyen190304@gmail.com',
+                recipient_list=[email],
+                fail_silently=False,
+            )
             # messages.success(request, 'Thank you for registering with us. We have sent you a verification email to your email address [rathan.kumar@gmail.com]. Please verify it.')
             return redirect('/accounts/login/?command=verification&email='+email)
     else:
@@ -167,9 +174,16 @@ def forgotPassword(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': default_token_generator.make_token(user),
             })
-            to_email = email
-            send_email = EmailMessage(mail_subject, message, to=[to_email])
-            send_email.send()
+            # to_email = email
+            # send_email = EmailMessage(mail_subject, message, to=[to_email])
+            # send_email.send()
+            send_mail(
+                subject=mail_subject,
+                message=message,
+                from_email='vanhuyen190304@gmail.com',
+                recipient_list=[email],
+                fail_silently=False,
+            )
 
             messages.success(request, 'Password reset email has been sent to your email address.')
             return redirect('login')

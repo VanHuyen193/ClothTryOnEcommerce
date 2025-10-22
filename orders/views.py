@@ -6,7 +6,7 @@ import datetime
 from .models import Order, Payment, OrderProduct
 import json
 from store.models import Product
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, send_mail
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -20,7 +20,6 @@ def payments(request):
         body = json.loads(request.body.decode('utf-8'))
         order_number = body.get('orderID')
 
-        # ✅ Lấy order dựa trên order_number thay vì request.user
         order = Order.objects.get(order_number=order_number, is_ordered=False)
 
         payment = Payment.objects.create(
@@ -62,8 +61,15 @@ def payments(request):
                 'user': order.user,
                 'order': order,
             })
-            send_email = EmailMessage(mail_subject, message, to=[order.user.email])
-            send_email.send()
+            # send_email = EmailMessage(mail_subject, message, to=[order.user.email])
+            # send_email.send()
+            send_mail(
+                subject=mail_subject,
+                message=message,
+                from_email='vanhuyen190304@gmail.com',
+                recipient_list=[order.user.email],
+                fail_silently=False,
+            )
         except Exception as e:
             print("Email error:", e)
 
