@@ -1,0 +1,111 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <style>
+    .month-btn {
+      padding: 4px 10px;
+      margin: 0 4px 4px 0;
+    }
+    .month-btn.is-active {
+      background: #79aec8;
+      color: #fff;
+    }
+  </style>
+{% endblock %}
+
+{% block content_title %}
+  <h1>Sales dashboard theo tháng</h1>
+{% endblock %}
+
+{% block object-tools %}{% endblock %}
+
+{% block content %}
+
+  <div class="module" style="margin-bottom:16px;">
+    <form method="get" id="filter-form"
+          style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <div>
+        <label for="year-select"><strong>Năm:</strong></label>
+        <select id="year-select" name="year"
+                onchange="document.getElementById('filter-form').submit()">
+          {% for y in years %}
+            <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>
+              {{ y }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="display:flex; flex-wrap:wrap; gap:6px;">
+        {% for m in months %}
+          <button type="submit"
+                  name="month"
+                  value="{{ m.number }}"
+                  class="button month-btn {% if m.number == selected_month %}is-active{% endif %}">
+            {{ m.label }}
+          </button>
+        {% endfor %}
+      </div>
+    </form>
+  </div>
+
+  <div class="module" style="margin-bottom:16px;">
+    <h2>Summary tháng {{ selected_month }}/{{ selected_year }}</h2>
+    <div style="display:flex; gap:24px; flex-wrap:wrap;">
+      <div><strong>Total orders:</strong> {{ total_orders }}</div>
+      <div><strong>Gross revenue:</strong> {{ gross_revenue|floatformat:2 }}</div>
+      <div><strong>Tax collected:</strong> {{ tax_total|floatformat:2 }}</div>
+      <div><strong>Net revenue:</strong> {{ net_revenue|floatformat:2 }}</div>
+    </div>
+  </div>
+
+  <div class="module" style="margin-bottom:16px;">
+    <h2>Doanh thu theo ngày (tháng {{ selected_month }}/{{ selected_year }})</h2>
+    <div style="height:350px;">
+      <canvas id="dailyRevenueChart"></canvas>
+    </div>
+  </div>
+
+  {{ daily_labels|json_script:"daily-labels" }}
+  {{ daily_values|json_script:"daily-values" }}
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    (function () {
+      const labels = JSON.parse(
+        document.getElementById('daily-labels').textContent
+      );
+      const values = JSON.parse(
+        document.getElementById('daily-values').textContent
+      );
+
+      const ctx = document.getElementById('dailyRevenueChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',   // BIỂU ĐỒ CỘT
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Doanh thu ngày',
+            data: values
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: 'Revenue' }
+            },
+            x: {
+              title: { display: true, text: 'Ngày trong tháng' }
+            }
+          }
+        }
+      });
+    })();
+  </script>
+
+{% endblock %}
