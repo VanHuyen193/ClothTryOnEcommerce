@@ -82,6 +82,36 @@
 							{% endif %}
 						</article> <!-- product-info-aside .// -->
 					</form>
+					<hr>
+
+<!-- ====== TRY-ON AREA ====== -->
+<div class="card mt-3">
+  <div class="card-body">
+    <h5>Try-on (thử đồ)</h5>
+    <p class="text-muted mb-2">Upload ảnh của bạn, sau đó bấm Try-on để xem kết quả.</p>
+
+    <div class="form-group">
+      <input type="file" id="tryon-input" accept="image/*" class="form-control-file">
+    </div>
+
+    <button type="button" id="tryon-button" class="btn btn-outline-primary">
+      Try-on
+    </button>
+
+    <div id="tryon-loading" class="mt-3" style="display:none;">
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      <span>Đang xử lý, vui lòng đợi...</span>
+    </div>
+
+    <div id="tryon-result" class="mt-3" style="display:none;">
+      <h6>Kết quả thử đồ</h6>
+      <div class="border p-2">
+        <img id="tryon-result-image" src="" alt="Try-on result" class="img-fluid">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ====== END TRY-ON AREA ====== -->
 				</main> <!-- col.// -->
 			</div> <!-- row.// -->
 		</div> <!-- card.// -->
@@ -185,5 +215,68 @@
 	</div> <!-- container .//  -->
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const input = document.getElementById('tryon-input');
+  const button = document.getElementById('tryon-button');
+  const loading = document.getElementById('tryon-loading');
+  const resultBox = document.getElementById('tryon-result');
+  const resultImg = document.getElementById('tryon-result-image');
+
+  const tryOnUrl = "{% url 'try_on' single_product.id %}";
+
+  button.addEventListener('click', function () {
+    if (!input.files.length) {
+      alert('Vui lòng chọn ảnh của bạn trước.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('input_image', input.files[0]);
+
+    // bật loading + disable nút
+    loading.style.display = 'block';
+    resultBox.style.display = 'none';
+    button.disabled = true;
+    button.textContent = 'Đang thử...';
+
+    fetch(tryOnUrl, {
+      method: 'POST',
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.result_url) {
+        // GIỮ loading thêm 10 giây rồi mới show ảnh
+        setTimeout(() => {
+          loading.style.display = 'none';
+          resultImg.src = data.result_url;
+          resultBox.style.display = 'block';
+          button.disabled = false;
+          button.textContent = 'Try-on';
+        }, 10000); // 10.000 ms = 10 giây
+      } else if (data.error) {
+        loading.style.display = 'none';
+        button.disabled = false;
+        button.textContent = 'Try-on';
+        alert('Lỗi: ' + data.error);
+      } else {
+        loading.style.display = 'none';
+        button.disabled = false;
+        button.textContent = 'Try-on';
+        alert('Không nhận được kết quả try-on.');
+      }
+    })
+    .catch(err => {
+      loading.style.display = 'none';
+      button.disabled = false;
+      button.textContent = 'Try-on';
+      console.error(err);
+      alert('Có lỗi khi gọi try-on.');
+    });
+  });
+});
+</script>
+
 
 {% endblock %}

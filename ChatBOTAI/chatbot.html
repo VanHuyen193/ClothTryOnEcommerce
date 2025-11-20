@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <title>Website với Chatbot</title>
+</head>
+<body>
+  <!-- Khu vực dành cho chatbot -->
+  <div id="chatbot-container"></div>
+  
+  <!-- Script tích hợp Chainlit -->
+  <script src="http://localhost:8001/copilot/index.js"></script>
+  <script>
+    window.addEventListener("chainlit-call-fn", (e) => {
+      const { name, args, callback } = e.detail;
+      callback("You sent: " + args.msg);
+      theme = whitestyle;
+    });
+    
+    window.mountChainlitWidget({
+      chainlitServer: "http://localhost:8001",
+      elementId: "chatbot-container" // ID của div nơi muốn hiển thị chatbot
+    });
+        setTimeout(() => {
+            const copilotDiv = document.getElementById('chainlit-copilot');
+            if (copilotDiv && copilotDiv.shadowRoot) {
+                const style = document.createElement('style');
+                style.textContent = `
+                    #chainlit-copilot-button {
+                        background-color: hsl(149 50% 36%) !important;
+                    }
+                    #chainlit-copilot-button svg {
+                        fill: white !important; 
+                    }
+
+                    .dark {
+                        --background: 150 44% 24% !important; 
+                        --card: 160 25% 40% !important;
+                        --card-foreground: hsl(0 0% 5%) !important; 
+                        --primary: 0 30% -180% !important; 
+                        --primary-foreground: hsl(0 0% 100%) !important; 
+                        --border: hsl(149 50% 30%) !important;
+                        --input: hsl(180 60% 98%) !important; 
+                        --ring: hsl(149 50% 36%) !important; 
+                        --muted: hsl(180 60% 90%) !important; 
+                        --muted-foreground: hsl(0 0% 30%) !important; 
+                        --accent: 160 25% 44% !important;
+                    }
+                    
+                    .cl-header {
+                        background-color: hsl(149 50% 30%) !important; 
+                        color: white !important; /* Chữ trắng trên header */
+                        border-bottom: 1px solid hsl(149 50% 20%) !important; 
+                    }
+
+                    .cl-message-user .cl-message-bubble {
+                        background-color: hsl(149 50% 36%) !important; 
+                        color: white !important; /* Chữ trắng */
+                        border: 1px solid hsl(149 50% 20%) !important; 
+                        border-radius: 0.75rem !important; /* Bo tròn góc */
+                    }
+
+                    /* Tin nhắn của trợ lý (bên trái) */
+                    .cl-message-assistant .cl-message-bubble {
+                        background-color: hsl(180 60% 98%) !important; 
+                        color: hsl(0 0% 5%) !important; 
+                        border: 1px solid hsl(149 50% 30%) !important; 
+                        border-radius: 0.75rem !important; 
+                    }
+                    
+                    .cl-avatar-assistant {
+                        background-color: hsl(149 50% 36%) !important;
+                        color: white !important; 
+                    }
+
+                    .cl-text-input {
+                        background-color: hsl(180 60% 98%) !important; 
+                        border: 1px solid hsl(149 50% 30%) !important; 
+                        color: hsl(0 0% 5%) !important;
+                        border-radius: 0.5rem !important;
+                    }
+
+                    ::-webkit-scrollbar {
+                        width: 8px;
+                    }
+                    ::-webkit-scrollbar-track {
+                        background: hsl(180 60% 90%); 
+                        border-radius: 4px;
+                    }
+                    ::-webkit-scrollbar-thumb {
+                        background: hsl(149 50% 36%); 
+                        border-radius: 4px;
+                    }
+                    ::-webkit-scrollbar-thumb:hover {
+                        background: hsl(149 50% 25%); 
+                    }
+                `;
+                copilotDiv.shadowRoot.appendChild(style);
+            }
+        }, 1000);
+  </script>
+</body>
+</html>
