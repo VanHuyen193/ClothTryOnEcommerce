@@ -1,0 +1,173 @@
+/* CSS tùy chỉnh cho header thu gọn */
+.section-header {
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-main {
+    padding: 0;
+}
+
+.brand-wrap {
+    transition: opacity 0.3s ease;
+}
+
+.brand-wrap:hover {
+    opacity: 0.8;
+}
+
+.category-nav {
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.category-nav .btn-link {
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    border-radius: 6px;
+}
+
+.category-nav .btn-link:hover {
+    color: #007bff !important;
+    background-color: #f8f9fa;
+}
+
+.search-box {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.search-box .form-control {
+    border: none;
+    padding: 8px 15px;
+    font-size: 0.85rem;
+}
+
+.search-box .form-control:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+.search-box .btn {
+    border-radius: 0 20px 20px 0;
+    padding: 8px 15px;
+    font-size: 0.85rem;
+}
+
+.cart-widget {
+    color: #495057;
+    transition: all 0.2s ease;
+    padding: 6px 8px;
+    border-radius: 8px;
+}
+
+.cart-widget:hover {
+    color: #007bff;
+    background-color: #f8f9fa;
+}
+
+.cart-widget .icon-sm {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    background-color: #f8f9fa;
+}
+
+.cart-widget:hover .icon-sm {
+    background-color: #007bff;
+    color: white;
+}
+
+.notify {
+    top: 2px;
+    right: 2px;
+    font-size: 0.65rem;
+    padding: 3px 6px;
+}
+
+.dropdown .icon-sm {
+    width: 36px;
+    height: 36px;
+    background-color: #f8f9fa;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.dropdown .btn-link:hover .icon-sm {
+    background-color: #007bff;
+    color: white;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.dropdown-item {
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+}
+
+.dropdown-item-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .search-box {
+        margin-top: 8px;
+    }
+    
+    .category-nav .btn-link {
+        font-size: 0.85rem;
+        padding: 6px 10px;
+    }
+    
+    .cart-widget {
+        padding: 4px 6px;
+    }
+    
+    .cart-widget .icon-sm {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .dropdown .icon-sm {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+@media (max-width: 576px) {
+    .brand-wrap img {
+        max-height: 35px !important;
+    }
+    
+    .search-box .form-control {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .search-box .btn {
+        padding: 6px 12px;
+    }
+    
+    .category-nav .btn-link {
+        font-size: 0.8rem;
+        padding: 4px 8px;
+    }
+}
