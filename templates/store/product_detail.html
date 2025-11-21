@@ -87,8 +87,8 @@
 <!-- ====== TRY-ON AREA ====== -->
 <div class="card mt-3">
   <div class="card-body">
-    <h5>Try-on (thử đồ)</h5>
-    <p class="text-muted mb-2">Upload ảnh của bạn, sau đó bấm Try-on để xem kết quả.</p>
+    <h5>Try-on</h5>
+    <p class="text-muted mb-2">Upload your photo, then click Try-on to see the results.</p>
 
     <div class="form-group">
       <input type="file" id="tryon-input" accept="image/*" class="form-control-file">
@@ -100,11 +100,11 @@
 
     <div id="tryon-loading" class="mt-3" style="display:none;">
       <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-      <span>Đang xử lý, vui lòng đợi...</span>
+      <span>Processing, please wait...</span>
     </div>
 
     <div id="tryon-result" class="mt-3" style="display:none;">
-      <h6>Kết quả thử đồ</h6>
+      <h6>Results</h6>
       <div class="border p-2">
         <img id="tryon-result-image" src="" alt="Try-on result" class="img-fluid">
       </div>
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   button.addEventListener('click', function () {
     if (!input.files.length) {
-      alert('Vui lòng chọn ảnh của bạn trước.');
+      alert('Please select your photo first.');
       return;
     }
 
@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loading.style.display = 'block';
     resultBox.style.display = 'none';
     button.disabled = true;
-    button.textContent = 'Đang thử...';
+    button.textContent = 'Try on...';
 
     fetch(tryOnUrl, {
       method: 'POST',
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
         loading.style.display = 'none';
         button.disabled = false;
         button.textContent = 'Try-on';
-        alert('Không nhận được kết quả try-on.');
+        alert('No try-on results received.');
       }
     })
     .catch(err => {
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
       button.disabled = false;
       button.textContent = 'Try-on';
       console.error(err);
-      alert('Có lỗi khi gọi try-on.');
+      alert('Error calling try-on.');
     });
   });
 });
